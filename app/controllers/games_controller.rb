@@ -16,6 +16,22 @@ class GamesController < ApplicationController
         render json: {errors: invalid.record.errors}, status: :unprocessable_entity
     end
 
+    def update
+        game = Game.find(params[:id])
+        game.update!(game_params)
+        render json: game, status: :ok
+    rescue ActiveRecord::RecordInvalid => invalid
+        render json: {errors: invalid.record.errors}, status: :unprocessable_entity
+    end
+
+    def destroy
+        game = Game.find(params[:id])
+        game.destroy
+        head :no_content
+    rescue ActiveRecord::RecordInvalid => invalid
+        render json: {errors: invalid.record.errors}, status: :not_found
+    end
+
     private
 
     def game_params
